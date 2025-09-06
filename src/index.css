@@ -1,0 +1,24 @@
+@import "tailwindcss";    
+    @tailwind utilities;
+@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+  --bg-color: white;
+  --text-color: black;
+}
+
+/* Override for dark mode */
+@layer theme {
+  .dark {
+    --bg-color: #111827; /* e.g., Tailwind’s gray-900 */
+    --text-color: #f3f4f6; /* e.g., Tailwind’s gray-100 */
+  }
+}
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+@utilities{
+  .container{
+    
+  }
+}
