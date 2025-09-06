@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "/api/v1", // your backend URL
+  baseURL: import.meta.env.VITE_API_URL || "/api/v1",
   withCredentials: true, // ✅ important so cookies get sent
 });
 

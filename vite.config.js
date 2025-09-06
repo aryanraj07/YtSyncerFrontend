@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/v1": {
-        target: "https://playnchat.onrender.com",
+        target: "http://localhost:8000",
       },
     },
   },
