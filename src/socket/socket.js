@@ -8,7 +8,7 @@ export const createSocket = (token) => {
     socket = null;
   }
   console.log("🔌 Creating new socket connection...");
-  socket = io("http://localhost:8000", {
+  socket = io("https://playnchat.onrender.com", {
     transports: ["websocket"],
     auth: { token },
     autoConnect: true,

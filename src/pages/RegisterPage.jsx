@@ -27,15 +27,11 @@ const RegisterPage = () => {
       Object.entries(user).forEach(([key, value]) => {
         formData.append(key, value);
       });
-      const res = await axios.post(
-        "http://localhost:8000/api/v1/users/register",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const res = await axios.post("https://playnchat.onrender.com", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log(res.data);
       navigate("/login");
     } catch (err) {
