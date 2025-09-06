@@ -24,15 +24,18 @@ const LoginPage = () => {
       });
 
       toast.success("User logged in successfully");
+      const { user: userDetail, accessToken } = res.data?.data;
       setAuth({
-        user: res.data?.data?.user,
-        token: res.data?.data?.accessToken,
+        user: userDetail,
+        token: accessToken,
         isLoggedIn: true,
       });
       const newAuth = {
-        user: res.data?.data?.user,
-        token: res.data?.data?.accessToken,
+        user: userDetail,
+        token: accessToken,
+        isLoggedIn: true,
       };
+
       localStorage.setItem("auth", JSON.stringify(newAuth));
       setTimeout(() => {
         navigate("/dashboard");
