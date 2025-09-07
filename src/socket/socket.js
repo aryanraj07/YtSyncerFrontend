@@ -11,7 +11,7 @@ export const createSocket = (token) => {
   socket = io("https://playnchat.onrender.com", {
     transports: ["websocket"],
     auth: { token },
-    autoConnect: true,
+    // autoConnect: true,
   });
 
   return socket;
