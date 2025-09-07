@@ -1,5 +1,6 @@
 // axiosInstance.js
 import axios from "axios";
+import { getAuth, setAuth } from "../context/authService";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "/api/v1",
@@ -22,14 +23,22 @@ api.interceptors.response.use(
       console.log("🔄 Trying refresh token...");
       try {
         // Call refresh token endpoint
-        await api.post("/auth/refresh-token");
+        const { data } = await api.post("/users/refresh-token");
+
+        const currentAuth = getAuth();
+        const updatedAuth = {
+          ...currentAuth,
+          token: data.accessToken,
+          isLoggedIn: true,
+        };
+
+        setAuth(updatedAuth); // updates memory + localStorage
         console.log("✅ Refresh token success, retrying original request");
 
-        // Retry original request
         return api(originalRequest);
       } catch (refreshError) {
-        console.error("Refresh token expired. Please login again.");
         console.error("❌ Refresh token expired:", refreshError.response?.data);
+        setAuth({ user: null, token: null, isLoggedIn: false });
         window.location.href = "/login";
       }
     }

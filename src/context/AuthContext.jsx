@@ -1,20 +1,19 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { getAuth, setAuth as saveAuth } from "./authService";
 
 const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState({
-    user: null,
-    auth: null,
-    isLoggedIn: false,
-  });
+  const [auth, setAuth] = useState(getAuth());
   useEffect(() => {
-    const auth = JSON.parse(localStorage.getItem("auth"));
-    if (auth) {
-      setAuth(auth);
-    }
+    setAuth(getAuth());
   }, []);
+  const updateAuth = (newAuth) => {
+    setAuth(newAuth);
+    saveAuth(newAuth); // sync both context + localStorage
+  };
+
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ auth, setAuth: updateAuth }}>
       {children}
     </AuthContext.Provider>
   );
