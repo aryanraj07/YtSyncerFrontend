@@ -20,7 +20,7 @@ const UploadModal = ({ title, existingImage, file, onSave, onClose }) => {
   }, [localFile]);
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-4 rounded-lg max-w-sm w-full">
+      <div className="bg-white p-2 rounded-lg max-w-sm w-full m-2">
         <h2 className="mb-3 font-semibold">{title}</h2>
 
         <div className="h-40 w-full mb-3">
@@ -136,31 +136,37 @@ const Profile = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (editDetails) {
-      if (
-        userDetails.fullName === user?.fullName &&
-        userDetails.email === user?.email
-      ) {
-        toast.info("No changes detected");
-        setEditDetails(false);
-        return;
-      }
-      const confirmed = await confirm("Save changes to your profile?");
-      if (confirmed) {
+    if (!editDetails) {
+      // Editing start → backup current details
+      setOriginalDetails(userDetails);
+      setEditDetails(true);
+      return;
+    }
+    if (
+      userDetails.fullName === user?.fullName &&
+      userDetails.email === user?.email
+    ) {
+      toast.info("No changes detected");
+      setEditDetails(false);
+      return;
+    }
+    const confirmed = await confirm("Save changes to your profile?");
+    if (confirmed) {
+      try {
         const res = await api.post("/users/update-profile", userDetails);
         if (res.data?.data?.user) {
           setAuth((prev) => ({ ...prev, user: res.data.data.user }));
           setOriginalDetails(res.data.data.user); // update backup
           toast.success("Profile updated successfully!");
+          setEditDetails((prev) => !prev);
         }
-      } else {
-        setUserDetails(originalDetails);
+      } catch {
+        toast.error("Something went wrong while updating profile!");
       }
     } else {
-      // editing start → backup store
-      setOriginalDetails(userDetails);
+      setUserDetails(originalDetails);
+      setEditDetails(false);
     }
-    setEditDetails((prev) => !prev);
   };
 
   return (
@@ -191,7 +197,7 @@ const Profile = () => {
               </>
             )}
 
-            <div className="avatar h-20 w-20 rounded-full absolute bottom-0  overflow-hidden bg-white p-3 shadow-md">
+            <div className="avatar h-20 w-20 rounded-full absolute bottom-0  overflow-hidden bg-white p-2 shadow-md">
               <img
                 src={
                   modalConfig.type === "avatar" && previewUrl
@@ -199,6 +205,7 @@ const Profile = () => {
                     : user?.avatar
                 }
                 alt="avatar image"
+                className="rounded-full"
               />
               <button
                 title="Edit Avatar Image"
@@ -231,10 +238,10 @@ const Profile = () => {
             </div>
             <button
               title="Edit User Details"
-              onClick={() => setEditDetails((prev) => !prev)}
+              onClick={handleSubmit}
               className="cursor-pointer text-violet-500 p-1 rounded-full shadow-md"
             >
-              {editDetails ? <FaSave onClick={handleSubmit} /> : <FaEdit />}
+              {editDetails ? <FaSave /> : <FaEdit />}
             </button>
           </div>
         </div>

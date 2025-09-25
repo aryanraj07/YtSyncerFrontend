@@ -3,17 +3,14 @@ import { getAuth, setAuth as saveAuth } from "./authService";
 
 const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState(getAuth());
-  useEffect(() => {
-    setAuth(getAuth());
-  }, []);
-  const updateAuth = (newAuth) => {
-    setAuth(newAuth);
-    saveAuth(newAuth); // sync both context + localStorage
+  const [auth, setAuthState] = useState(getAuth());
+  const setAuth = (newAuth) => {
+    setAuthState(newAuth);
+    saveAuth(newAuth); // sync with localStorage
   };
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth: updateAuth }}>
+    <AuthContext.Provider value={{ auth, setAuth }}>
       {children}
     </AuthContext.Provider>
   );
