@@ -1,9 +1,12 @@
 // authService.js
-let auth = JSON.parse(localStorage.getItem("auth")) || {
-  user: null,
-  token: null,
-  isLoggedIn: false,
-};
+let storedAuth = localStorage.getItem("auth");
+let auth = storedAuth
+  ? JSON.parse(storedAuth)
+  : {
+      user: null,
+      token: null,
+      isLoggedIn: false,
+    };
 
 export const getAuth = () => auth;
 

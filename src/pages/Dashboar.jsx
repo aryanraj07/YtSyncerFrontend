@@ -24,25 +24,29 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Your ROom</h2>
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Create Room"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="p-2 border mr-2"
-        />
-        <input
-          type="text"
-          placeholder="Enter Yt vieo url"
-          value={videoUrl}
-          onChange={(e) => setVideoUrl(e.target.value)}
-          className="p-2 border mr-2"
-        />
-        <button onClick={createRoom}>Create Room</button>
+    <div className="container min-w-screen mx-auto p-4">
+      <div className="max-w-md ">
+        <div className="space-y-4 mb-8">
+          <input
+            type="text"
+            placeholder="Enter Room Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="inputBox w-full"
+          />
+          <input
+            type="text"
+            placeholder="Enter YouTube Video URL"
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            className="inputBox w-full"
+          />
+          <button className="btnPrimary w-full" onClick={createRoom}>
+            Create Room
+          </button>
+        </div>
       </div>
+      <h2>Your Rooms</h2>
       <ul>
         {rooms.map((room) => (
           <li key={room._id} className="mb-2">

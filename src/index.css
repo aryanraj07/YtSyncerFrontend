@@ -1,5 +1,5 @@
-@import "tailwindcss";    
-    @tailwind utilities;
+@import "tailwindcss";
+@tailwind utilities;
 @custom-variant dark (&:where(.dark, .dark *));
 @theme {
   --bg-color: white;
@@ -17,8 +17,11 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
 }
-@utilities{
-  .container{
-    
+@layer utilities {
+  .btnPrimary {
+    @apply bg-indigo-600 text-white font-semibold rounded-lg  hover:bg-indigo-700 transition duration-300 shadow-md p-3;
+  }
+  .inputBox {
+    @apply px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 relative;
   }
 }

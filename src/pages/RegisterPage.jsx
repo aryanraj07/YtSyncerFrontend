@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 const RegisterPage = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
   const [user, setUser] = useState({
     username: "",
     fullName: "",
@@ -113,14 +116,22 @@ const RegisterPage = () => {
             >
               Password
             </label>
-            <input
-              name="password"
-              type="password"
-              className="w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 "
-              id="password"
-              value={user.password}
-              onChange={handleChange}
-            />
+            <div className="relative ">
+              <input
+                name="password"
+                type={`${showPassword ? "text" : "password"}`}
+                id="password"
+                value={user.password}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500  "
+              />
+              <div
+                className="absolute right-3 bottom-3 cursor-pointer"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {!showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              </div>
+            </div>
           </div>
           <div className="mb-3">
             <label

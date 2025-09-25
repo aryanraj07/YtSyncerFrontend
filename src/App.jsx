@@ -7,10 +7,11 @@ import LoginPage from "./pages/LoginPage";
 import PrivateRoute from "./routes/PrivateRoutes";
 import Dashboard from "./pages/Dashboar";
 import Room from "./pages/Room";
+import Profile from "./pages/profile/Profile";
 
 const App = () => {
   return (
-  <BrowserRouter>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainLayouts />}>
           <Route index={1} element={<Homepage />} />
@@ -26,6 +27,7 @@ const App = () => {
         >
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/room/:roomId" element={<Room />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
       </Routes>
     </BrowserRouter>

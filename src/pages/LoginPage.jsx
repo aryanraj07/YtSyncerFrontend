@@ -3,9 +3,11 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
-import { FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 const LoginPage = () => {
   const { setAuth } = useAuth();
+
+  const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState({
     username: "",
     email: "",
@@ -101,16 +103,21 @@ const LoginPage = () => {
             >
               Password
             </label>
-            <input
-              name="password"
-              type="password"
-              id="password"
-              value={user.password}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 relative "
-            />
-            <div className="absolute right-2 bottom-2">
-              <FaEyeSlash />
+            <div className="relative ">
+              <input
+                name="password"
+                type={`${showPassword ? "text" : "password"}`}
+                id="password"
+                value={user.password}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500  "
+              />
+              <div
+                className="absolute right-3 bottom-3 cursor-pointer"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {!showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              </div>
             </div>
           </div>
 

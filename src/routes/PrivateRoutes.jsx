@@ -6,7 +6,6 @@ import api from "../api/axiosInstance";
 export default function PrivateRoute({ children }) {
   const [loading, setLoading] = useState(true);
   const [isAuth, setIsAuth] = useState(false);
-
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -15,7 +14,6 @@ export default function PrivateRoute({ children }) {
       } catch (err) {
         console.log(err.name);
         console.log(err.stack);
-
         setIsAuth(false);
       } finally {
         setLoading(false);
