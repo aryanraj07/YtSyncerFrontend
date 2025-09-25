@@ -23,7 +23,9 @@ api.interceptors.response.use(
       console.log("🔄 Trying refresh token...");
       try {
         // Call refresh token endpoint
-        const { data } = await api.post("/users/refresh-token");
+        const { data } = await api.post("/users/refresh-token", {
+          withCredentials: true,
+        });
 
         const currentAuth = getAuth();
         const updatedAuth = {
