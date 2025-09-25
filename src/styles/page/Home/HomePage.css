@@ -8,6 +8,7 @@
 .hero-content {
   flex: 1;
   max-width: 50%;
+  gap: 10px;
 }
 .hero-img {
   flex: 1;
@@ -24,19 +25,24 @@
 /* 📱 Responsive (mobile / small tablets) */
 @media (max-width: 992px) {
   .hero-section {
-    background: url("/heroBanner.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    flex-direction: column;
     text-align: center;
+    flex-direction: column;
     padding: 0;
+    align-items: flex-start;
   }
   .hero-content {
     max-width: 100%;
-    margin-bottom: 2rem;
+    flex: 0;
+    /* margin-bottom: 2rem; */
   }
+
   .hero-img {
-    display: none;
+    display: block; /* now mobile image shows */
+    width: 100%;
+  }
+
+  .hero-img img {
+    width: 100%;
+    height: auto;
   }
 }

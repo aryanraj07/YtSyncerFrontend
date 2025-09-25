@@ -106,7 +106,7 @@ const Profile = () => {
     const formData = new FormData();
     formData.append(
       modalConfig.type === "cover" ? "coverImage" : "avatar",
-      modalConfig.file
+      file
     );
     try {
       const endpoint =
@@ -256,8 +256,9 @@ const Profile = () => {
           }
           onSave={async (file) => {
             if (!file) return;
+            setModalConfig((prev) => ({ ...prev, file }));
             await handleImageSave(file, modalConfig.type);
-            await handleImageSave();
+
             // modalConfig will be reset inside handleImageSave
           }}
           onClose={() =>

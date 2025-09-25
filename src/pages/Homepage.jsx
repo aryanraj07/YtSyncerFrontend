@@ -5,8 +5,8 @@ import "../styles/page/Home/HomePage.css";
 const Homepage = () => {
   return (
     <div className="hero-section">
-      <div className="hero-content">
-        <h1 className="hero-title text-teal-400 text-3xl font-bold">
+      <div className="hero-content flex items-center justify-center flex-col ">
+        <h1 className="hero-title text-teal-400 text-3xl font-bold md:text-6xl ">
           Watch and Connect
         </h1>
         <p>
@@ -17,7 +17,7 @@ const Homepage = () => {
         </p>
       </div>
       <div className="hero-img ">
-        <img src="/heroBanner.png" alt="Hero Banner" />
+        <img src="/heroBanner.png" alt="Hero Banner" loading="lazy" />
       </div>
     </div>
   );
