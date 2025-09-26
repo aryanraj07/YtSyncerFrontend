@@ -9,7 +9,7 @@ export default function PrivateRoute({ children }) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await api.get("/users/check"); // backend endpoint jo sirf logged-in user ke liye chale
+        await api.get("/users/check", { withCredentials: true }); // backend endpoint jo sirf logged-in user ke liye chale
         setIsAuth(true);
       } catch (err) {
         console.log(err.name);
