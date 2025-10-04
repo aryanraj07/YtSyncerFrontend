@@ -16,7 +16,13 @@ const Header = () => {
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      await api.post("/users/logout");
+      await api.post(
+        "/users/logout",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
     } catch (error) {
       console.error("Logout failed:", error);
     }
