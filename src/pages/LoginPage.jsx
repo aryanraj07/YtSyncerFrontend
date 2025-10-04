@@ -40,7 +40,8 @@ const LoginPage = () => {
 
       localStorage.setItem("auth", JSON.stringify(newAuth));
       setTimeout(() => {
-        navigate("/dashboard");
+        // navigate("/dashboard");
+        navigate("/");
       }, 2000);
     } catch (err) {
       console.log(err);
