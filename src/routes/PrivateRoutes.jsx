@@ -1,29 +1,32 @@
-// PrivateRoute.jsx
+import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import api from "../api/axiosInstance";
+import Spinner from "../components/utils/Spinner";
 
-export default function PrivateRoute({ children }) {
-  const [loading, setLoading] = useState(true);
+const PrivateRoutes = ({ children }) => {
   const [isAuth, setIsAuth] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    const checkAuth = async () => {
+    async function checkAuth() {
       try {
-        await api.get("/users/check", { withCredentials: true }); // backend endpoint jo sirf logged-in user ke liye chale
-        setIsAuth(true);
+        const res = await api.get("/users/check");
+        if (res.status === 200) {
+          setIsAuth(true);
+        } else {
+          setIsAuth(false);
+        }
       } catch (err) {
-        console.log(err.name);
-        console.log(err.stack);
+        console.log(err);
         setIsAuth(false);
       } finally {
         setLoading(false);
       }
-    };
-
+    }
     checkAuth();
   }, []);
+  if (loading) return <Spinner />;
+  return isAuth ? children : <Navigate to="/login" />;
+};
 
-  if (loading) return <div>Loading...</div>;
-
-  return isAuth ? children : <Navigate to="/login" replace />;
-}
+export default PrivateRoutes;

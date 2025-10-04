@@ -20,12 +20,16 @@ api.interceptors.response.use(
     // If access token expired & we haven’t retried yet
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      console.log("🔄 Trying refresh token...");
+
       try {
         // Call refresh token endpoint
-        const { data } = await api.post("/users/refresh-token", {
-          withCredentials: true,
-        });
+        const { data } = await api.post(
+          "/users/refresh-token",
+          {},
+          {
+            withCredentials: true,
+          }
+        );
 
         const currentAuth = getAuth();
         const updatedAuth = {
