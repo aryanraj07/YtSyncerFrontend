@@ -12,29 +12,25 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    console.log(
-      "❌ Axios error:",
-      error.response?.status,
-      error.stack,
-      error.response?.data
-    );
+    if (originalRequest.url.includes("/users/refresh-token")) {
+      {
+        console.warn("Skipping interceptor for refresh-token request");
+        return Promise.reject(error);
+      }
+    }
+
     // If access token expired & we haven’t retried yet
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
         // Call refresh token endpoint
-        const { data } = await api.post(
-          "/users/refresh-token",
-          {},
-          { withCredentials: true }
-        );
-        setAuth({ ...getAuth(), token: data.accessToken, isLoggedIn: true });
+        await api.post("/users/refresh-token", {}, { withCredentials: true });
 
         return api(originalRequest);
       } catch (refreshError) {
         console.error("❌ Refresh token expired:", refreshError.response?.data);
-        setAuth({ user: null, token: null, isLoggedIn: false });
+
         window.location.href = "/login";
         return Promise.reject(error);
       }

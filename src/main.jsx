@@ -6,9 +6,16 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import App from "./App.jsx";
 
 import "react-toastify/dist/ReactToastify.css";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import { NotificationContextProvider } from "./context/NotificationContext.jsx";
+import { SocketProvider } from "./context/SocketContext.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
+  <AuthProvider>
+    <SocketProvider>
+      <NotificationContextProvider>
+        <App />
+      </NotificationContextProvider>
+    </SocketProvider>
+  </AuthProvider>
 );

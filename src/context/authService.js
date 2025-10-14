@@ -3,11 +3,11 @@
 export const getAuth = () => {
   try {
     const stored = localStorage.getItem("auth");
-    if (!stored) return { user: null, token: null, isLoggedIn: false };
+    if (!stored) return { user: null, isLoggedIn: false };
     return JSON.parse(stored);
   } catch (err) {
     console.error("Failed to parse auth from localStorage", err);
-    return { user: null, token: null, isLoggedIn: false };
+    return { user: null, isLoggedIn: false };
   }
 };
 

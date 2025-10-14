@@ -24,25 +24,26 @@ const LoginPage = () => {
       const res = await api.post("/users/login", user, {
         withCredentials: true,
       });
+      console.log(res);
+      if (res.data.statusCode === 200) {
+        toast.success("User logged in successfully");
+        const { user: userDetail } = res.data?.data;
+        setAuth({
+          user: userDetail,
 
-      toast.success("User logged in successfully");
-      const { user: userDetail, accessToken } = res.data?.data;
-      setAuth({
-        user: userDetail,
-        token: accessToken,
-        isLoggedIn: true,
-      });
-      const newAuth = {
-        user: userDetail,
-        token: accessToken,
-        isLoggedIn: true,
-      };
+          isLoggedIn: true,
+        });
+        const newAuth = {
+          user: userDetail,
+          isLoggedIn: true,
+        };
 
-      localStorage.setItem("auth", JSON.stringify(newAuth));
-      setTimeout(() => {
-        // navigate("/dashboard");
-        navigate("/");
-      }, 2000);
+        localStorage.setItem("auth", JSON.stringify(newAuth));
+        setTimeout(() => {
+          // navigate("/dashboard");
+          navigate("/");
+        }, 2000);
+      }
     } catch (err) {
       console.log(err);
 

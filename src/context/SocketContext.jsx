@@ -7,32 +7,41 @@ const SocketContext = createContext(null);
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = React.useState(null);
-  const { auth } = useAuth();
+  // const { auth } = useAuth();
 
-  useEffect(() => {
-    if (auth?.token) { 
-      const s = createSocket(auth.token);
+  useEffect(
+    () => {
+      // if (!auth?.token) {
+      //   console.log(" No auth token — skipping socket setup");
+      //   return;
+      // }
+      console.log(" Auth token changed — setting up new socket");
+      // if (auth?.token) {
+      const s = createSocket();
       setSocket(s);
 
       return () => {
+        console.log(" Cleaning up socket connection");
         if (s) s.disconnect();
       };
-    }
-  }, [auth?.token]);
+      // }
+    },
+    //  [auth?.token]
+    []
+  );
   useEffect(() => {
     if (!socket) return;
+    const onConnect = () => console.log("🔌 Connected:", socket.id);
 
-    socket.on("connect", () => {
-      console.log("🔌 Connected:", socket.id);
-    });
+    const onDisconnect = () => console.log("❌ Disconnected from socket");
 
-    socket.on("disconnect", () => {
-      console.log("❌ Disconnected");
-    });
+    socket.on("connect", onConnect);
+
+    socket.on("disconnect", onDisconnect);
 
     return () => {
-      socket.off("connect");
-      socket.off("disconnect");
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
     };
   }, [socket]);
 
