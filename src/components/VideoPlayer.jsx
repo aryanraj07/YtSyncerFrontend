@@ -1,68 +1,169 @@
 // src/components/VideoPlayer.jsx
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import YouTube from "react-youtube";
 import { useSocket } from "../context/SocketContext";
-
+import { toast } from "react-toastify";
+import { motion, AnimatePresence } from "framer-motion";
 export default function VideoPlayer({ videoUrl, roomId }) {
+  const isRemoteAction = useRef(false);
+
   const playerRef = useRef(null);
   const socket = useSocket();
-
+  const lastTimeRef = useRef(0);
+  const seekTimeout = useRef(null);
+  const syncTimeout = useRef(null);
+  const [showSyncing, setShowSyncing] = useState(false);
+  const [timeDelta, setTimeDelta] = useState(0);
+  const syncTimeoutRef = useRef(null);
   const getYouTubeId = (url) => {
-    if (!url || typeof url !== "string") return null; // safe check
+    if (!url || typeof url !== "string") return null;
     const reg = /(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const m = url.match(reg);
     return m ? m[1] : null;
   };
 
-  const opts = { playerVars: { autoplay: 0 } };
+  const opts = {
+    width: "100%",
+    height: "100%",
+    playerVars: { autoplay: 0 },
+  };
 
   const onReady = (e) => {
     playerRef.current = e.target;
+
+    if (socket && roomId) {
+      socket.emit("request:state", roomId);
+    }
   };
-
+  const showSync = useCallback((delta = 0) => {
+    setTimeDelta(delta.toFixed(1));
+    setShowSyncing(true);
+    clearTimeout(syncTimeoutRef.current);
+    syncTimeoutRef.current = setTimeout(() => setShowSyncing(false), 1500);
+  }, []);
+  const emitSeek = useCallback(
+    (time) => {
+      clearTimeout(seekTimeout.current);
+      seekTimeout.current = setTimeout(() => {
+        socket.emit("video:control", {
+          roomId,
+          action: "seek",
+          currentTime: time,
+        });
+      }, 500);
+    },
+    [socket, roomId]
+  );
   const sendControl = (action) => {
-    if (!socket) return;
-    if (!playerRef.current) return;
-
+    if (!socket || !playerRef.current) return;
     const currentTime = playerRef.current.getCurrentTime();
 
-    // Do local control immediately
     if (action === "play") playerRef.current.playVideo();
     if (action === "pause") playerRef.current.pauseVideo();
     if (action === "seek") playerRef.current.seekTo(currentTime, true);
 
-    // Emit event to other clients
     socket.emit("video:control", { roomId, action, currentTime });
   };
+
+  const onStateChange = (e) => {
+    const player = e.target;
+    const state = e.data;
+    if (isRemoteAction.current) return;
+
+    // Get current time
+    const currentTime = player.getCurrentTime();
+
+    // Detect manual seek (big jump)
+    if (Math.abs(currentTime - lastTimeRef.current) > 2) {
+      emitSeek(currentTime);
+    }
+
+    // Detect play/pause state
+    if (state === window.YT.PlayerState.PLAYING) {
+      socket.emit("video:control", { roomId, action: "play", currentTime });
+    }
+    if (state === window.YT.PlayerState.PAUSED) {
+      socket.emit("video:control", { roomId, action: "pause", currentTime });
+    }
+
+    // Save for next comparison
+    lastTimeRef.current = currentTime;
+  };
+  const smoothSync = (targetTime) => {
+    if (!playerRef.current) return;
+    const current = playerRef.current.getCurrentTime();
+    const diff = Math.abs(current - targetTime);
+
+    if (diff > 1.5) {
+      toast.info("⏱ Syncing video...", { autoClose: 1000 });
+      playerRef.current.seekTo(targetTime, true);
+    }
+  };
   useEffect(() => {
-    // listen to remote control events
-    const handler = ({ action, currentTime }) => {
+    if (!socket) return;
+
+    // ✅ Sync incoming control actions
+    const onControl = ({ action, currentTime, by, socketId }) => {
       if (!playerRef.current) return;
+      if (socket.id === socketId) return;
+      isRemoteAction.current = true;
       if (action === "play") playerRef.current.playVideo();
       if (action === "pause") playerRef.current.pauseVideo();
       if (action === "seek") playerRef.current.seekTo(currentTime, true);
+      if (by) toast.info(`${by} ${action}ed the video`);
+      setTimeout(() => (isRemoteAction.current = false), 500);
     };
 
-    if (socket) {
-      socket.on("video:control", handler);
-    }
+    // ✅ When backend sends saved state (on join or reconnect)
+    const onVideoState = (state) => {
+      if (!playerRef.current || !state) return;
+      if (state.currentTime) {
+        const delta = state.currentTime - playerRef.current.getCurrentTime();
+        // seekTo() is a YouTube IFrame Player API method that lets you jump (seek) the video to a specific timestamp.
+        playerRef.current.seekTo(state.currentTime, true);
+        showSync(delta);
+      }
+      // 🧩 Calculate how much time has passed since state was saved
+      const now = Date.now();
+      const elapsed = (now - (state.updatedAt || now)) / 1000;
+      let syncedTime =
+        state.action === "play"
+          ? state.currentTime + elapsed
+          : state.currentTime;
+      clearTimeout(syncTimeout.current);
+      syncTimeout.current = setTimeout(() => {
+        smoothSync(syncedTime);
+
+        if (state.action === "play") playerRef.current.playVideo();
+        if (state.action === "pause") playerRef.current.pauseVideo();
+      }, 300);
+      if (state.currentTime) playerRef.current.seekTo(state.currentTime, true);
+      if (state.action === "play") playerRef.current.playVideo();
+      if (state.action === "pause") playerRef.current.pauseVideo();
+    };
+
+    socket.on("video:control", onControl);
+    socket.on("video:state", onVideoState);
+
     return () => {
-      if (socket) socket.off("video:control", handler);
+      socket.off("video:control", onControl);
+      socket.off("video:state", onVideoState);
     };
   }, [socket]);
 
   return (
     <div className="p-4">
-      <div className="mb-4 d-flex gap-2">
+      {/* Controls */}
+      <div className="mb-4 flex flex-wrap gap-2">
         <button
           onClick={() => sendControl("play")}
-          className=" px-3 py-1 btn btn-success"
+          className="px-3 py-1 btn btn-success"
         >
           Play
         </button>
         <button
           onClick={() => sendControl("pause")}
-          className=" px-3 py-1 btn btn-danger"
+          className="px-3 py-1 btn btn-danger"
         >
           Pause
         </button>
@@ -73,13 +174,74 @@ export default function VideoPlayer({ videoUrl, roomId }) {
           Sync
         </button>
       </div>
-      {videoUrl && (
-        <YouTube
-          videoId={getYouTubeId(videoUrl)}
-          onReady={onReady}
-          opts={opts}
-        />
-      )}
+
+      {/* ✅ Responsive YouTube Wrapper */}
+      <div className="relative w-full pb-[56.25%] h-0 overflow-hidden rounded-lg shadow-md">
+        {videoUrl && (
+          <div className="absolute top-0 left-0 w-full h-full">
+            <YouTube
+              videoId={getYouTubeId(videoUrl)}
+              onReady={onReady}
+              onStateChange={onStateChange}
+              opts={opts}
+              className="w-full h-full"
+            />
+          </div>
+        )}
+      </div>
+      <AnimatePresence>
+        {showSyncing && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 rounded-lg"
+          >
+            {/* Time Delta */}
+            {timeDelta !== 0 && (
+              <div className="text-red-400 font-bold text-xl mb-2">
+                {timeDelta > 0 ? `+${timeDelta}s` : `${timeDelta}s`}
+              </div>
+            )}
+
+            {/* Spinner */}
+            {/* <div className="w-10 h-10 border-4 border-white/40 border-t-white rounded-full animate-spin mb-2" /> */}
+            <motion.div
+              className="w-10 h-10 border-4 border-white/40 border-t-white rounded-full mb-2"
+              animate={{
+                scale: 1 + Math.min(Math.abs(timeDelta) / 5, 0.8), // pulse up to +80% size
+              }}
+              transition={{
+                yoyo: Infinity, // pulse repeatedly
+                duration: 0.5,
+                ease: "easeInOut",
+              }}
+            />
+            {/* Sync Text */}
+            <div className="text-white text-xl font-semibold tracking-wide mb-2">
+              Syncing...
+            </div>
+
+            {/* Dynamic Gradient Bar */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: Math.min(Math.abs(timeDelta) / 10, 1) }}
+              exit={{ scaleX: 0 }}
+              transition={{ duration: 1 }}
+              style={{
+                background: `linear-gradient(to right, ${
+                  Math.abs(timeDelta) < 2
+                    ? "#facc15" // yellow
+                    : Math.abs(timeDelta) < 5
+                    ? "#f97316" // orange
+                    : "#ef4444" // red
+                })`,
+              }}
+              className="h-1 w-full origin-left rounded-full"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

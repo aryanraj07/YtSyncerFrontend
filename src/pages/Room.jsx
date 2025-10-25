@@ -5,12 +5,14 @@ import VideoPlayer from "../components/VideoPlayer";
 import ChatBox from "../components/ChatBox";
 import { useSocket } from "../context/SocketContext";
 import { toast } from "react-toastify";
+import InviteFriendsModal from "../components/Rooms/InviteFreindsModal";
 
 const Room = () => {
   const { roomId } = useParams();
   const [room, setRoom] = useState(null);
   const [roomJoined, setRoomJoined] = useState(false);
   const socket = useSocket(); // ⬅️ consume from context
+  const [showInviteModal, setShowInviteModal] = useState(false);
   const navigate = useNavigate();
   // Load room data
   useEffect(() => {
@@ -85,19 +87,65 @@ const Room = () => {
     socket.emit("room:leave", { roomId });
     navigate("/dashboard");
   };
+  const [showChat, setShowChat] = useState(false);
   if (!room) return <div>Loading room...</div>;
 
   return (
-    <div className="flex h-screen">
-      <div className="flex-1">
-        <VideoPlayer videoUrl={room.videoUrl} roomId={roomId} />
+    <div className="flex flex-col h-screen bg-[#0f0f0f] text-white">
+      {/* Top Bar */}
+      <div className="flex items-center justify-between px-4 py-3 bg-[#181818] border-b border-[#2b2b2b] shadow-md">
+        <h1 className="text-lg font-semibold tracking-wide flex items-center gap-2">
+          🎬 {room?.name || "Watch Room"}
+        </h1>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowChat((prev) => !prev)}
+            className="md:hidden bg-[#2b2b2b] hover:bg-[#3a3a3a] px-3 py-1 rounded-lg text-sm transition"
+          >
+            💬 {showChat ? "Hide Chat" : "Show Chat"}
+          </button>
+          <button
+            onClick={() => setShowInviteModal(true)}
+            className="bg-blue-600 hover:bg-blue-700 px-4 py-1 rounded-lg text-sm font-medium transition"
+          >
+            Invite
+          </button>
+          <button
+            onClick={leaveRoom}
+            className="bg-red-600 hover:bg-red-700 px-4 py-1 rounded-lg text-sm font-medium transition"
+          >
+            Leave
+          </button>
+        </div>
       </div>
-      <div className="w-96 border-l">
-        {socket && roomJoined && <ChatBox roomId={roomId} />}
+
+      {/* Main Layout */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Chat Section */}
+        <div
+          className={`transition-all duration-300 bg-[#181818] border-r border-[#2b2b2b] 
+          ${showChat ? "w-80 md:w-96" : "w-0 md:w-96"} 
+          overflow-hidden flex-shrink-0`}
+        >
+          {socket && roomJoined && <ChatBox roomId={roomId} />}
+        </div>
+
+        {/* Video Section */}
+        <div className="flex-1 flex flex-col bg-black relative">
+          <VideoPlayer videoUrl={room?.videoUrl} roomId={roomId} />
+
+          {/* Overlay Title */}
+          <div className="absolute bottom-3 left-4 bg-[#00000090] backdrop-blur-sm px-3 py-1 rounded-md text-sm text-gray-200">
+            {room?.videoTitle || "Now Playing"}
+          </div>
+        </div>
       </div>
-      <button onClick={leaveRoom} className="btn btn-danger px-4">
-        Leave Room
-      </button>
+      {showInviteModal && (
+        <InviteFriendsModal
+          roomId={roomId}
+          onClose={() => setShowInviteModal(false)}
+        />
+      )}
     </div>
   );
 };

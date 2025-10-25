@@ -6,11 +6,16 @@ const RoomLists = () => {
   const [rooms, setRooms] = useState([]);
   const [videoUrl, setVideoUrl] = useState("");
   const [name, setName] = useState("");
+  const [showInvite, setShowInvite] = useState(false);
   const navigate = useNavigate();
+  const [newRoomId, setNewRoomId] = useState(null);
   const createRoom = async () => {
     try {
       const res = await api.post("/room", { name, videoUrl });
-      navigate(`/room/${res.data.data._id}`);
+      setNewRoomId(res.data.data._id);
+      setShowInvite(true);
+
+      // navigate(`/room/${res.data.data._id}`);
     } catch (err) {
       console.log(err);
     }
@@ -60,6 +65,15 @@ const RoomLists = () => {
           </li>
         ))}
       </ul>
+      {showInvite && (
+        <InviteFriendsModal
+          roomId={newRoomId}
+          onClose={() => {
+            setShowInvite(false);
+            navigate(`/room/${newRoomId}`);
+          }}
+        />
+      )}
     </>
   );
 };
