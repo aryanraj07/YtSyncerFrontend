@@ -23,10 +23,13 @@ export const createSocket = () => {
     reconnectionAttempts: 5, // try reconnecting up to 5 times
     reconnectionDelay: 2000, // wait 2 seconds between attempts
   });
+  socket.isConnected = false;
   socket.on("connect", () => {
+    socket.isConnected = true;
     console.log(`Socket connected,${socket.id}`);
   });
   socket.on("disconnect", (reason) => {
+    socket.isConnected = false;
     console.log(`Socket disconnected,${reason}`);
   });
   socket.on("reconnect-attempt", (attempt) => {

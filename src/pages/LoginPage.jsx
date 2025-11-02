@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { createSocket } from "../socket/socket";
 const LoginPage = () => {
   const { setAuth } = useAuth();
 
@@ -37,7 +38,7 @@ const LoginPage = () => {
           user: userDetail,
           isLoggedIn: true,
         };
-
+        createSocket();
         localStorage.setItem("auth", JSON.stringify(newAuth));
         setTimeout(() => {
           // navigate("/dashboard");

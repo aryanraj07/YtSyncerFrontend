@@ -22,6 +22,18 @@ const InviteFriendsModal = ({ roomId, onClose }) => {
   }, []);
 
   const handleInvite = async (friendId) => {
+    if (!socket || !socket.connected) {
+      toast.warn("Socket not connected yet. Retrying...");
+      await new Promise((resolve) => {
+        const check = setInterval(() => {
+          if (socket?.connected) {
+            clearInterval(check);
+            resolve();
+          }
+        }, 500);
+      });
+    }
+
     setLoading(true);
 
     try {
