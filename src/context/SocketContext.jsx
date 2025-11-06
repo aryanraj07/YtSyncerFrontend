@@ -58,11 +58,11 @@ export const SocketProvider = ({ children }) => {
   //   };
   // }, [socket]);
 
-  useEffect(() => {
-    if (socket) {
-      console.log("Socket connected:", socket);
-    }
-  }, [socket]);
+  // useEffect(() => {
+  //   if (socket) {
+  //     console.log("Socket connected:", socket);
+  //   }
+  // }, [socket]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

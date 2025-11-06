@@ -6,12 +6,14 @@ import ChatBox from "../components/ChatBox";
 import { useSocket } from "../context/SocketContext";
 import { toast } from "react-toastify";
 import InviteFriendsModal from "../components/Rooms/InviteFreindsModal";
+import { useAuth } from "../context/AuthContext";
 
 const Room = () => {
   const { roomId } = useParams();
   const [room, setRoom] = useState(null);
   const [roomJoined, setRoomJoined] = useState(false);
   const socket = useSocket(); // ⬅️ consume from context
+  const { auth } = useAuth();
   const [showInviteModal, setShowInviteModal] = useState(false);
   const navigate = useNavigate();
   // Load room data
@@ -127,11 +129,17 @@ const Room = () => {
           ${showChat ? "w-80 md:w-96" : "w-0 md:w-96"} 
           overflow-hidden flex-shrink-0`}
         >
-          {socket && roomJoined && <ChatBox roomId={roomId} />}
+          {socket && roomJoined && (
+            <ChatBox
+              username={auth?.user?.username}
+              roomId={roomId}
+              userId={auth?.user?._id}
+            />
+          )}
         </div>
 
         {/* Video Section */}
-        <div className="flex-1 flex flex-col bg-black relative">
+        <div className="flex-1 flex flex-col bg-black relative ">
           <VideoPlayer videoUrl={room?.videoUrl} roomId={roomId} />
 
           {/* Overlay Title */}

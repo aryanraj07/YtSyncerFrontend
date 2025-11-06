@@ -154,7 +154,7 @@ export default function VideoPlayer({ videoUrl, roomId }) {
   return (
     <div className="p-4">
       {/* Controls */}
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="mb-4 mt-2 flex flex-wrap gap-2 min-h-[100px]">
         <button
           onClick={() => sendControl("play")}
           className="px-3 py-1 btn btn-success"
