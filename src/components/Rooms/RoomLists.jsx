@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axiosInstance";
+import InviteFriendsModal from "./InviteFreindsModal";
 
 const RoomLists = () => {
   const [rooms, setRooms] = useState([]);

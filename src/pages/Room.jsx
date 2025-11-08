@@ -143,9 +143,9 @@ const Room = () => {
           <VideoPlayer videoUrl={room?.videoUrl} roomId={roomId} />
 
           {/* Overlay Title */}
-          <div className="absolute bottom-3 left-4 bg-[#00000090] backdrop-blur-sm px-3 py-1 rounded-md text-sm text-gray-200">
+          {/* <div className="absolute bottom-3 left-4 bg-[#00000090] backdrop-blur-sm px-3 py-1 rounded-md text-sm text-gray-200">
             {room?.videoTitle || "Now Playing"}
-          </div>
+          </div> */}
         </div>
       </div>
       {showInviteModal && (
