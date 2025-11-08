@@ -138,9 +138,9 @@ export default function ChatBox({ roomId, username, userId }) {
   };
 
   return (
-    <div className="flex flex-col h-full min-h-[320px] ">
+    <div className="flex flex-col h-full relative bg-transparent">
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-transparent">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-transparent pb-18 md:pb-10">
         {messages.map((m, i) => {
           const mine = m.sender?._id === userId || m.sender?._id === "me";
           return (
@@ -148,7 +148,7 @@ export default function ChatBox({ roomId, username, userId }) {
               key={m._id || i}
               className={`flex ${mine ? "justify-end" : "justify-start"}`}
             >
-              {/* avatar (optional) */}
+              {/* avatar */}
               {!mine && (
                 <div className="mr-2 flex-shrink-0">
                   <div className="w-8 h-8 bg-gray-400 rounded-full text-xs flex items-center justify-center text-white">
@@ -182,7 +182,7 @@ export default function ChatBox({ roomId, username, userId }) {
               {mine && (
                 <div className="ml-2 flex-shrink-0">
                   <div className="w-8 h-8 bg-green-600 rounded-full text-xs flex items-center justify-center text-white">
-                    {"Y"}
+                    Y
                   </div>
                 </div>
               )}
@@ -190,7 +190,7 @@ export default function ChatBox({ roomId, username, userId }) {
           );
         })}
 
-        {/* Typing indicator (show as a bubble on left) */}
+        {/* Typing indicator */}
         {typingUsers.length > 0 && (
           <div className="flex justify-start">
             <div className="bg-white text-black px-3 py-2 rounded-xl rounded-bl-none shadow-sm">
@@ -207,14 +207,17 @@ export default function ChatBox({ roomId, username, userId }) {
         <div ref={chatEndRef} />
       </div>
 
-      {/* Input area - sticky bottom, mobile-safe */}
+      {/* Fixed input bar */}
       <form
         onSubmit={sendMessage}
-        className="fixed bottom-0 left-0 right-0 md:relative md:bottom-auto md:left-auto md:right-auto bg-transparent p-3 md:p-2 border-t md:border-t-0"
+        className="sticky bottom-0  bg-[#0b0b0b] p-3 border-t border-[#2b2b2b] z-50"
+        style={{
+          paddingBottom: "calc(env(safe-area-inset-bottom, 16px) + 8px)",
+        }}
       >
         <div
-          className="max-w-md mx-auto md:mx-0 flex items-center gap-2 bg-[#0b0b0b] rounded-full px-3 py-2 shadow-lg"
-          style={{ backdropFilter: "blur(6px)" }}
+          className="max-w-md mx-auto flex items-center gap-2 rounded-full px-3 py-2 shadow-lg"
+          style={{ backgroundColor: "#111", backdropFilter: "blur(6px)" }}
         >
           <input
             value={input}
@@ -233,9 +236,6 @@ export default function ChatBox({ roomId, username, userId }) {
             Send
           </button>
         </div>
-
-        {/* spacing for mobile bottom nav (adjust px if your nav is taller) */}
-        <div className="block md:hidden" style={{ height: 72 }} />
       </form>
     </div>
   );

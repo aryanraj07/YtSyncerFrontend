@@ -154,7 +154,7 @@ export default function VideoPlayer({ videoUrl, roomId }) {
   return (
     <div className="p-4">
       {/* Controls */}
-      <div className="mb-4 mt-2 flex flex-wrap gap-2 min-h-[100px]">
+      <div className="mb-4 mt-2 pt-2 flex flex-wrap gap-2 min-h-[100px]">
         <button
           onClick={() => sendControl("play")}
           className="px-3 py-1 btn btn-success"
@@ -174,7 +174,6 @@ export default function VideoPlayer({ videoUrl, roomId }) {
           Sync
         </button>
       </div>
-
       {/* ✅ Responsive YouTube Wrapper */}
       <div className="relative w-full pb-[56.25%] h-0 overflow-hidden rounded-lg shadow-md">
         {videoUrl && (
@@ -189,59 +188,6 @@ export default function VideoPlayer({ videoUrl, roomId }) {
           </div>
         )}
       </div>
-      <AnimatePresence>
-        {showSyncing && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 rounded-lg"
-          >
-            {/* Time Delta */}
-            {timeDelta !== 0 && (
-              <div className="text-red-400 font-bold text-xl mb-2">
-                {timeDelta > 0 ? `+${timeDelta}s` : `${timeDelta}s`}
-              </div>
-            )}
-
-            {/* Spinner */}
-            {/* <div className="w-10 h-10 border-4 border-white/40 border-t-white rounded-full animate-spin mb-2" /> */}
-            <motion.div
-              className="w-10 h-10 border-4 border-white/40 border-t-white rounded-full mb-2"
-              animate={{
-                scale: 1 + Math.min(Math.abs(timeDelta) / 5, 0.8), // pulse up to +80% size
-              }}
-              transition={{
-                yoyo: Infinity, // pulse repeatedly
-                duration: 0.5,
-                ease: "easeInOut",
-              }}
-            />
-            {/* Sync Text */}
-            <div className="text-white text-xl font-semibold tracking-wide mb-2">
-              Syncing...
-            </div>
-
-            {/* Dynamic Gradient Bar */}
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: Math.min(Math.abs(timeDelta) / 10, 1) }}
-              exit={{ scaleX: 0 }}
-              transition={{ duration: 1 }}
-              style={{
-                background: `linear-gradient(to right, ${
-                  Math.abs(timeDelta) < 2
-                    ? "#facc15" // yellow
-                    : Math.abs(timeDelta) < 5
-                    ? "#f97316" // orange
-                    : "#ef4444" // red
-                })`,
-              }}
-              className="h-1 w-full origin-left rounded-full"
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
