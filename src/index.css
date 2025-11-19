@@ -3,6 +3,7 @@
 
 :root {
   --neon: #70fa83;
+  --blue: #2a6380;
 }
 
 @layer utilities {
@@ -13,9 +14,28 @@
     @apply px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 relative;
   }
   .main-heading {
-    font-size: 64px;
-    font-weight: 900;
+    font-size: 32px;
+    line-height: 60px;
+    font-weight: 700;
     color: #fff;
     -webkit-text-stroke: 10px solid var(--neon);
+  }
+  .primary-btn {
+    /* background-color: var(--neon); */
+    color: white;
+    @apply shadow-2xl rounded-md bg-indigo-700;
+    padding: 6px 8px;
+  }
+  .outline-btn {
+    /* background-color: var(--blue); */
+    @apply shadow-2xl rounded-xl;
+    border: 1px solid var(--neon);
+
+    padding: 6px 8px;
+  }
+}
+@media screen and (min-width: 768px) {
+  .main-heading {
+    font-size: 58px;
   }
 }

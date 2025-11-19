@@ -7,18 +7,20 @@
 }
 .hero-content {
   flex: 1;
-  gap: 10px;
 }
 .hero-img {
   flex: 1;
   display: flex;
+  /* height: 500px; */
+  height: 400px;
+  /* max-width: 600px; */
   justify-content: flex-end;
 }
 .hero-img img {
   width: 100%;
   /* max-width: 500px; */
   height: auto;
-  object-fit: cover; /* object-cover jaisa */
+  object-fit: contain; /* object-cover jaisa */
   border-radius: 12px;
 }
 /* 📱 Responsive (mobile / small tablets) */
