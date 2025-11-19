@@ -231,7 +231,7 @@ const Header = () => {
           )}
           <NotificaitonIcon onClick={handleShowNotifcationBar} />
         </div>
-        <div className="fixed bottom-0 left-0 w-full  border-t border-gray-300 shadow-md flex justify-around items-center py-2 md:hidden z-20 text-violet-500">
+        <div className="fixed bottom-0 left-0 w-full  border-t border-gray-300 shadow-md flex justify-around items-center py-2 md:hidden z-50 text-violet-500">
           {mobileMenu.map((item) => (
             <button
               key={item.name}
@@ -246,7 +246,7 @@ const Header = () => {
           ))}
         </div>
       </nav>
-      <div className="absolute right-2 top-15 w-100  ">
+      <div className="absolute right-2 top-15 w-100 z-10">
         {showNotificationBar && <Notifications />}
       </div>
     </div>

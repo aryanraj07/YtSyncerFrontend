@@ -19,7 +19,7 @@ const UploadModal = ({ title, existingImage, file, onSave, onClose }) => {
     }
   }, [localFile]);
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-10">
       <div className="bg-white p-2 rounded-lg max-w-sm w-full m-2">
         <h2 className="mb-3 font-semibold">{title}</h2>
 
@@ -190,7 +190,7 @@ const Profile = () => {
                   onClick={() =>
                     setModalConfig({ type: "cover", file: null, open: true })
                   }
-                  className="absolute top-2 right-2 z-5 cursor-pointer bg-violet-500 p-2 rounded-full shadow-md"
+                  className="absolute top-2 right-2 z-2 cursor-pointer bg-violet-500 p-2 rounded-full shadow-md"
                 >
                   <FaEdit />
                 </button>

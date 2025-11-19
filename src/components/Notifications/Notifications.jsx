@@ -4,8 +4,12 @@ import { useNotifications } from "../../context/NotificationContext";
 import { useNavigate } from "react-router-dom";
 const Notifications = () => {
   // const [notifications, setNotifications] = useState([]);
-  const { handleResponse, notifications, handleMarkAsRead } =
-    useNotifications();
+  const {
+    handleResponse,
+    notifications,
+    handleMarkAsRead,
+    handleShowNotifcationBar,
+  } = useNotifications();
   const navigate = useNavigate();
   return (
     <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-xl rounded-2xl p-4 w-full max-w-sm border border-violet-200 dark:border-violet-600">
@@ -14,7 +18,7 @@ const Notifications = () => {
       </h2>
 
       {notifications && notifications.length > 0 ? (
-        <div className="max-h-[400px] overflow-y-auto space-y-3 pr-2">
+        <div className="relative max-h-[400px] overflow-y-auto space-y-3 pr-2">
           {notifications.map((item, index) => (
             <div
               key={index}
@@ -80,6 +84,7 @@ const Notifications = () => {
                           e.stopPropagation();
                           handleMarkAsRead(item._id);
                           navigate(`/room/${item.roomId}`);
+                          handleShowNotifcationBar(false);
                         }}
                         className="bg-green-500 text-white px-3 py-1 rounded-md text-xs hover:bg-green-600"
                       >
@@ -90,6 +95,7 @@ const Notifications = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           handleMarkAsRead(item._id);
+                          handleShowNotifcationBar(true);
                         }}
                       >
                         Ignore

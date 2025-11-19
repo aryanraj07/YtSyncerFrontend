@@ -11,6 +11,7 @@ export const NotificationContextProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotificationBar, setShowNoticationBar] = useState(false);
+
   console.log("Socket ID in Notification Context:", socket?.id);
   useEffect(() => {
     if (!auth?.isLoggedIn || !auth?.user) return;
@@ -81,7 +82,9 @@ export const NotificationContextProvider = ({ children }) => {
     try {
       await api.put(`/notification/${id}/read`);
       setNotifications((prev) =>
-        prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
+        prev
+          .map((n) => (n._id === id ? { ...n, isRead: true } : n))
+          .filter((n) => n._id !== id)
       );
       setUnreadCount((prev) => Math.max(prev - 1, 0));
     } catch (err) {

@@ -210,7 +210,7 @@ export default function ChatBox({ roomId, username, userId }) {
       {/* Fixed input bar */}
       <form
         onSubmit={sendMessage}
-        className="sticky bottom-0  bg-[#0b0b0b] p-3 border-t border-[#2b2b2b] z-50"
+        className="sticky bottom-0  bg-[#0b0b0b] p-3 border-t border-[#2b2b2b] z-20"
         style={{
           paddingBottom: "calc(env(safe-area-inset-bottom, 16px) + 8px)",
         }}

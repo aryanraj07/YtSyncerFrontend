@@ -11,7 +11,16 @@ module.exports = {
         xl: "5rem",
       },
     },
-    extend: {},
+    extend: {
+      colors: {
+        neon: "#70fa83",
+        darkBg: "#111827",
+        darkText: "#f3f4f6",
+        violet: "#3b1e59",
+        neonOrange: "#ff6a3d",
+        neonBlue: "#4da3ff",
+      },
+    },
   },
   darkMode: "class", // enable dark mode via 'dark' class
   plugins: [],

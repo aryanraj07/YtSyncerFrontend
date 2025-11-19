@@ -95,7 +95,7 @@ export default function VideoPlayer({ videoUrl, roomId }) {
     const diff = Math.abs(current - targetTime);
 
     if (diff > 1.5) {
-      toast.info("⏱ Syncing video...", { autoClose: 1000 });
+      // toast.info("⏱ Syncing video...", { autoClose: 1000 });
       playerRef.current.seekTo(targetTime, true);
     }
   };
@@ -110,7 +110,7 @@ export default function VideoPlayer({ videoUrl, roomId }) {
       if (action === "play") playerRef.current.playVideo();
       if (action === "pause") playerRef.current.pauseVideo();
       if (action === "seek") playerRef.current.seekTo(currentTime, true);
-      if (by) toast.info(`${by} ${action}ed the video`);
+      // if (by) toast.info(`${by} ${action}ed the video`);
       setTimeout(() => (isRemoteAction.current = false), 500);
     };
 
@@ -152,9 +152,9 @@ export default function VideoPlayer({ videoUrl, roomId }) {
   }, [socket]);
 
   return (
-    <div className="p-4">
+    <div className="p-3">
       {/* Controls */}
-      <div className="mb-4 mt-2 pt-2 flex flex-wrap gap-2 min-h-[100px]">
+      <div className="mb-2 mt-2 pt-2 flex flex-wrap gap-2 min-h-[50px]">
         <button
           onClick={() => sendControl("play")}
           className="px-3 py-1 btn btn-success"

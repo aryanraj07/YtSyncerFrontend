@@ -6,9 +6,7 @@ const Homepage = () => {
   return (
     <div className="hero-section flex items-center justify-center">
       <div className="hero-content flex items-center justify-center flex-col ">
-        <h1 className="hero-title text-teal-400 text-3xl font-bold md:text-6xl ">
-          Watch and Connect
-        </h1>
+        <h1 className="main-heading">Watch and Connect</h1>
         <p>
           {" "}
           <p className="hero-subtitle">
