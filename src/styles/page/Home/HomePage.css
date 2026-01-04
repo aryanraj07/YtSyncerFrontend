@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: start;
-  min-height: 100vh; /* full viewport height */
+
   padding: 2rem;
 }
 .hero-content {

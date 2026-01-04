@@ -6,21 +6,19 @@ import { ToastContainer } from "react-toastify";
 import Footer from "../components/footer/Footer";
 const MainLayouts = () => {
   return (
-    
-      <div className="min-h-screen bg-black text-white">
-        <Header />
-        <ToastContainer
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          pauseOnHover
-          draggable
-        />
+    <div className="min-h-screen bg-black text-white">
+      <Header />
+      <ToastContainer
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
 
-        <Outlet />
-        <Footer />
-      </div>
-    
+      <Outlet />
+      <Footer />
+    </div>
   );
 };
 

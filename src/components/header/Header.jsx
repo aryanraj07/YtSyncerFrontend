@@ -72,9 +72,10 @@ const Header = () => {
   ];
   const renderLinkClass = (path) =>
     currentPath === path ? "text-teal-400" : "text-white";
+  const isRoom = currentPath.includes("room");
   return (
     <div className="relative ">
-      <nav className="container mx-auto flex items-center justify-between p-4 ">
+      <nav className="container mx-auto flex items-center justify-between p-4 h-navbar">
         <Link className="logo text-violet-600 font-bold text-2xl" to="/">
           PlayNWatch
         </Link>
@@ -231,20 +232,22 @@ const Header = () => {
           )}
           <NotificaitonIcon onClick={handleShowNotifcationBar} />
         </div>
-        <div className="fixed bottom-0 left-0 w-full  border-t border-gray-300 shadow-md flex justify-around items-center py-2 md:hidden z-50 text-violet-500">
-          {mobileMenu.map((item) => (
-            <button
-              key={item.name}
-              onClick={() => navigate(item.path)}
-              className="flex flex-col items-center"
-            >
-              {item.icon}
-              <span className={`text-xs ${renderLinkClass(item.path)}`}>
-                {item.name}
-              </span>
-            </button>
-          ))}
-        </div>
+        {!isRoom && (
+          <div className="fixed h-[var(--navbar-mobile-height)] bottom-0 left-0 w-full  border-t border-gray-300 shadow-md flex justify-around items-center py-2 md:hidden z-50 text-violet-500">
+            {mobileMenu.map((item) => (
+              <button
+                key={item.name}
+                onClick={() => navigate(item.path)}
+                className="flex flex-col items-center"
+              >
+                {item.icon}
+                <span className={`text-xs ${renderLinkClass(item.path)}`}>
+                  {item.name}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </nav>
       <div className="absolute right-2 top-15 w-100 z-10">
         {showNotificationBar && <Notifications />}

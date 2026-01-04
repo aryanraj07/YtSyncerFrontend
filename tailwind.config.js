@@ -20,6 +20,12 @@ module.exports = {
         neonOrange: "#ff6a3d",
         neonBlue: "#4da3ff",
       },
+      height: {
+        navbar: "var(--navbar-height)",
+      },
+      minHeight: {
+        hero: "calc(100svh-var(--navbar-height)-var(--bottom-menu-height)-var(--safe-bottom))",
+      },
     },
   },
   darkMode: "class", // enable dark mode via 'dark' class

@@ -6,8 +6,28 @@
   --neon: #70fa83;
   --blue: #2a6380;
   --primary-font: "Signika", sans-serif;
+  --navbar-height: 64px;
+  --bottom-menu-height: 64px;
+  --chatbox-input-height: 100px;
+}
+@theme {
+  --h-navbar: var(--navbar-height);
+  --h-chatt-input: var(--chatbox-input-height);
+  --min-h-hero: calc(
+    100svh- var(--navbar-height) - var(--bottom-menu-height) - var(--safe-bottom)
+  );
+  --pb-chatbox: var(--chatbox-input-height);
 }
 
+@media (min-width: 768px) {
+  :root {
+    /* Desktop: no bottom menu */
+    --bottom-menu-height: 0px;
+
+    /* Desktop chat input smaller */
+    --chatbox-input-height: 60px;
+  }
+}
 @layer utilities {
   .btnPrimary {
     @apply bg-indigo-600 text-white font-semibold rounded-lg  hover:bg-indigo-700 transition duration-300 shadow-md p-3;
@@ -26,8 +46,9 @@
   .primary-btn {
     /* background-color: var(--neon); */
     color: white;
-    @apply shadow-2xl rounded-md bg-indigo-700;
-    padding: 6px 8px;
+    @apply shadow-2xl  bg-indigo-700;
+    padding: 6px 10px;
+    border-radius: 0px 12px 0px 12px;
   }
   .outline-btn {
     /* background-color: var(--blue); */
@@ -39,6 +60,12 @@
   .hero-subtitle {
     font-size: 20px;
     font-weight: 500;
+  }
+}
+@layer components {
+  .glass {
+    backgroundcolor: "#111";
+    backdropfilter: blur(6px);
   }
 }
 @media screen and (min-width: 768px) {

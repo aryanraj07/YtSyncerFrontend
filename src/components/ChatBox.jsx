@@ -140,6 +140,7 @@ export default function ChatBox({ roomId, username, userId }) {
   return (
     <div className="flex flex-col h-full relative bg-transparent">
       {/* Messages area */}
+
       <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-transparent pb-18 md:pb-10">
         {messages.map((m, i) => {
           const mine = m.sender?._id === userId || m.sender?._id === "me";
@@ -211,13 +212,13 @@ export default function ChatBox({ roomId, username, userId }) {
       <form
         onSubmit={sendMessage}
         className="sticky bottom-0  bg-[#0b0b0b] p-3 border-t border-[#2b2b2b] z-20"
-        style={{
-          paddingBottom: "calc(env(safe-area-inset-bottom, 16px) + 8px)",
-        }}
+        // style={{
+        //   paddingBottom: "calc(env(safe-area-inset-bottom, 16px) + 8px)",
+        // }}
       >
         <div
-          className="max-w-md mx-auto flex items-center gap-2 rounded-full px-3 py-2 shadow-lg"
-          style={{ backgroundColor: "#111", backdropFilter: "blur(6px)" }}
+          className="max-w-md mx-auto flex items-center gap-2 rounded-full px-3 py-2 shadow-lg pb-chatbox glass"
+          // style={{ backgroundColor: "#111", backdropFilter: "blur(6px)" }}
         >
           <input
             value={input}
@@ -226,8 +227,7 @@ export default function ChatBox({ roomId, username, userId }) {
               handleTyping();
             }}
             placeholder="Type a message..."
-            className="flex-1 bg-transparent outline-none text-sm text-white placeholder-gray-400"
-            style={{ maxHeight: "120px" }}
+            className="flex-1 bg-transparent outline-none text-sm text-white placeholder-gray-400 h-chatt-input"
           />
           <button
             type="submit"
