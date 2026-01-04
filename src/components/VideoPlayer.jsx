@@ -25,7 +25,12 @@ export default function VideoPlayer({ videoUrl, roomId }) {
   const opts = {
     width: "100%",
     height: "100%",
-    playerVars: { autoplay: 0 },
+    playerVars: {
+      playsinline: 1,
+      modestbranding: 1,
+      rel: 0,
+      autoplay: 0,
+    },
   };
 
   const onReady = (e) => {
@@ -175,17 +180,19 @@ export default function VideoPlayer({ videoUrl, roomId }) {
         </button>
       </div>
       {/* ✅ Responsive YouTube Wrapper */}
-      <div className="relative w-full pb-[56.25%] h-0 overflow-hidden rounded-lg shadow-md">
+      <div
+        className="relative w-full   aspect-video bg-black   h-[56vw]
+    sm:h-[50vw]   md:rounded-lg  md:h-auto
+    lg:h-auto   overflow-hidden rounded-lg shadow-md"
+      >
         {videoUrl && (
-          <div className="absolute top-0 left-0 w-full h-full">
-            <YouTube
-              videoId={getYouTubeId(videoUrl)}
-              onReady={onReady}
-              onStateChange={onStateChange}
-              opts={opts}
-              className="w-full h-full"
-            />
-          </div>
+          <YouTube
+            videoId={getYouTubeId(videoUrl)}
+            onReady={onReady}
+            onStateChange={onStateChange}
+            opts={opts}
+            className="absolute inset-0 w-full h-full"
+          />
         )}
       </div>
     </div>

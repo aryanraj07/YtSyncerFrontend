@@ -137,6 +137,10 @@ export default function ChatBox({ roomId, username, userId }) {
     socket.emit("chat:typing", { roomId });
   };
 
+  useEffect(() => {
+    window.scrollTo({ botttom: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <div className="flex flex-col h-full relative bg-transparent">
       {/* Messages area */}

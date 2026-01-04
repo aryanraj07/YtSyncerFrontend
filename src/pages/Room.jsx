@@ -7,9 +7,10 @@ import { useSocket } from "../context/SocketContext";
 import { toast } from "react-toastify";
 import InviteFriendsModal from "../components/Rooms/InviteFreindsModal";
 import { useAuth } from "../context/AuthContext";
-
+import { BsChatFill } from "react-icons/bs";
 const Room = () => {
   const { roomId } = useParams();
+  const [menuOpen, setMenuOpen] = useState(false);
   const [room, setRoom] = useState(null);
   const [roomJoined, setRoomJoined] = useState(false);
   const socket = useSocket(); // ⬅️ consume from context
@@ -101,10 +102,10 @@ const Room = () => {
         </h1>
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setShowChat((prev) => !prev)}
-            className="md:hidden bg-[#2b2b2b] hover:bg-[#3a3a3a] px-3 py-1 rounded-lg text-sm transition"
+            className="sm:hidden p-2 rounded-lg bg-[#2b2b2b] hover:bg-[#3a3a3a]"
+            onClick={() => setShowChat((p) => !p)}
           >
-            💬 {showChat ? "Hide Chat" : "Show Chat"}
+            <BsChatFill color="white" />
           </button>
           <button
             onClick={() => setShowInviteModal(true)}
@@ -112,12 +113,44 @@ const Room = () => {
           >
             Invite
           </button>
-          <button
-            onClick={leaveRoom}
-            className="bg-red-600 hover:bg-red-700 px-4 py-1 rounded-lg text-sm font-medium transition"
-          >
-            Leave
-          </button>
+          {/* Desktop Button */}
+          <div className="hidden sm:flex items-center gap-3">
+            <button
+              onClick={() => setShowChat((prev) => !prev)}
+              className=" bg-[#2b2b2b] hover:bg-[#3a3a3a] px-3 py-1 rounded-lg text-sm transition inline-flex items-center gap-2"
+            >
+              <BsChatFill color="white" />{" "}
+              {showChat ? "Hide Chat" : "Show Chat"}
+            </button>
+
+            <button
+              onClick={leaveRoom}
+              className="bg-red-600 hover:bg-red-700 px-4 py-1 rounded-lg text-sm font-medium transition"
+            >
+              Leave
+            </button>
+          </div>
+          <div className="relative sm:hidden">
+            <button onClick={() => setMenuOpen((p) => !p)} className="p-2 ">
+              ⋮
+            </button>
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-40 bg-[#202020] rounded-xl shadow-lg border border-[#2b2b2b] z-50">
+                {/* <button
+                  onClick={() => setShowInviteModal(true)}
+                  className="block w-full text-left px-4 py-2 text-sm hover:bg-[#2b2b2b]"
+                >
+                  Invite
+                </button> */}
+                <button
+                  onClick={leaveRoom}
+                  className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-[#2b2b2b]"
+                >
+                  Leave Room
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -126,7 +159,7 @@ const Room = () => {
         {/* Chat Section */}
         <div
           className={`transition-all duration-300 bg-[#181818] border-r border-[#2b2b2b]
-      ${showChat ? "w-80 md:w-96" : "hidden md:flex md:w-96"}
+      ${showChat ? "w-80 md:w-96" : "hidden  md:w-96"}
       flex flex-col h-[calc(100vh-60px)]`}
         >
           {socket && roomJoined && (
